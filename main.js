@@ -21,9 +21,9 @@ import { Game } from "./modules/game.js";
 import { LevelManager } from "./modules/level-manager.js";
 import { clamp } from "./modules/math.js";
 
-const canvas = /** @type {HTMLCanvasElement} */ (document.querySelector(
-  "canvas",
-));
+const canvas = /** @type {HTMLCanvasElement} */ (
+  document.querySelector("canvas")
+);
 const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext("2d"));
 
 /**

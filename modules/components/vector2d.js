@@ -9,5 +9,3 @@ export class Vector2d {
     this.y = y;
   }
 }
-
-new Vector2d();
