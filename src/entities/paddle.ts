@@ -1,13 +1,20 @@
-import { Vector2d } from "../components/vector2d.js";
+import { Vector2d } from "../components/vector2d";
+
+type PaddleConstructorOptions = {
+  position: Vector2d;
+  width: number;
+  height: number;
+};
 
 export class Paddle {
+  position: Vector2d;
+  width: number;
+  height: number;
+
   /**
-   * @param {object} opts
-   * @param {Vector2d} opts.position
-   * @param {number} opts.width
-   * @param {number} opts.height
+   * Create paddle
    */
-  constructor(opts) {
+  constructor(opts: PaddleConstructorOptions) {
     this.position = opts.position;
     this.width = opts.width;
     this.height = opts.height;

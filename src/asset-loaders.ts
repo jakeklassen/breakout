@@ -1,9 +1,9 @@
 /**
  * Loads an image
- * @param {string} path image URL
- * @returns {Promise<HTMLImageElement>}
+ * @param path image URL
+ * @returns
  */
-export const loadImage = (path) =>
+export const loadImage = (path: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);

@@ -1,10 +1,11 @@
+import levelsImageUrl from "url:../assets/levels.png";
 import {
   aabbBottom,
   aabbLeft,
   aabbRight,
   aabbTop,
   intersects,
-} from "./modules/collision.js";
+} from "./collision";
 import {
   BRICK_HEIGHT_PX,
   BRICK_PADDING_SIDE_PX,
@@ -14,17 +15,15 @@ import {
   LEVEL_HEIGHT_UNITS,
   LEVEL_WIDTH_UNITS,
   TITLE_BAR_HEIGHT_PX,
-} from "./modules/constants.js";
-import { Ball } from "./modules/entities/ball.js";
-import { Paddle } from "./modules/entities/paddle.js";
-import { Game } from "./modules/game.js";
-import { LevelManager } from "./modules/level-manager.js";
-import { clamp } from "./modules/math.js";
+} from "./constants";
+import { Ball } from "./entities/ball";
+import { Paddle } from "./entities/paddle";
+import { Game } from "./game";
+import { LevelManager } from "./level-manager";
+import { clamp } from "./math";
 
-const canvas = /** @type {HTMLCanvasElement} */ (
-  document.querySelector("canvas")
-);
-const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext("2d"));
+const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
+const ctx = canvas.getContext("2d")!;
 
 /**
  * Track the mouse
@@ -58,9 +57,8 @@ let last = performance.now();
 
 /**
  * The game loop.
- * @param {DOMHighResTimeStamp} hrt
  */
-function frame(hrt) {
+function frame(hrt: DOMHighResTimeStamp) {
   // How much time has elapsed since the last frame?
   // Also convert to seconds.
   dt = (hrt - last) / 1000;
@@ -274,10 +272,7 @@ function frame(hrt) {
   requestAnimationFrame(frame);
 }
 
-/**
- * @param {MouseEvent} e
- */
-function mouseMoveHandler(e) {
+function mouseMoveHandler(e: MouseEvent) {
   // `movementX` is a relative position. It's the change in position only, so
   // we need to add it to the mouse position.
   mouse.position.x += e.movementX;
@@ -322,7 +317,7 @@ document.addEventListener("pointerlockchange", pointerLockChange, false);
 
 game.levelManager
   .loadLevels({
-    imagePath: "./assets/levels.png",
+    imagePath: levelsImageUrl,
     levelWidth: LEVEL_WIDTH_UNITS,
     levelHeight: LEVEL_HEIGHT_UNITS,
     brickWidth: BRICK_WIDTH_PX,

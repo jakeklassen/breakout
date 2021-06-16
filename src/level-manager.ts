@@ -1,5 +1,27 @@
-import { loadImage } from "./asset-loaders.js";
-import { Brick } from "./entities/brick.js";
+import { loadImage } from "./asset-loaders";
+import { Brick } from "./entities/brick";
+
+type LoadLevelOptions = {
+  /**
+   * Image URL
+   */
+  imagePath: string;
+
+  /**
+   * as units of `brickWidth`
+   */
+  levelWidth: number;
+
+  /**
+   * as units of `brickHeight`
+   */
+  levelHeight: number;
+
+  brickWidth: number;
+  brickHeight: number;
+  brickXOffset: number;
+  brickYOffset: number;
+};
 
 export class LevelManager {
   #currentLevel = 1;
@@ -11,11 +33,9 @@ export class LevelManager {
   #brickXOffset = 0;
   #brickYOffset = 0;
 
-  /** @type {HTMLImageElement | null} */
-  #image = null;
+  #image: HTMLImageElement | null = null;
 
-  /** @type {Brick[]} */
-  bricks = [];
+  bricks: Brick[] = [];
 
   get currentLevelNumber() {
     return this.#currentLevel;
@@ -35,16 +55,8 @@ export class LevelManager {
 
   /**
    * Load new levels image
-   * @param {object} opts
-   * @param {string} opts.imagePath - image URL
-   * @param {number} opts.levelWidth as units of `brickWidth`
-   * @param {number} opts.levelHeight as units of `brickHeight`
-   * @param {number} opts.brickWidth
-   * @param {number} opts.brickHeight
-   * @param {number} opts.brickXOffset
-   * @param {number} opts.brickYOffset
    */
-  async loadLevels(opts) {
+  async loadLevels(opts: LoadLevelOptions) {
     this.#currentLevel = 0;
     this.bricks = [];
 
@@ -64,9 +76,8 @@ export class LevelManager {
 
   /**
    * Change level
-   * @param {number} num Level number
    */
-  changeLevel(num) {
+  changeLevel(num: number) {
     if (num < 1 || num > this.#numberOfLevels) {
       throw new Error(`changeLevel(${num}): Out of range`);
     }
@@ -94,19 +105,21 @@ export class LevelManager {
   }
 }
 
+type GenerateBricksOptions = {
+  image: HTMLImageElement;
+  num: number;
+  levelWidth: number;
+  levelHeight: number;
+  brickWidth: number;
+  brickHeight: number;
+  brickXOffset: number;
+  brickYOffset: number;
+};
+
 /**
  * Generate Brick array based on level data
- * @param {object} opts
- * @param {HTMLImageElement} opts.image
- * @param {number} opts.num
- * @param {number} opts.levelWidth
- * @param {number} opts.levelHeight
- * @param {number} opts.brickWidth
- * @param {number} opts.brickHeight
- * @param {number} opts.brickXOffset
- * @param {number} opts.brickYOffset
  */
-export const generateBricks = (opts) => {
+export const generateBricks = (opts: GenerateBricksOptions) => {
   const {
     image,
     num,
@@ -122,7 +135,11 @@ export const generateBricks = (opts) => {
   const canvas = document.createElement("canvas");
   canvas.width = image.width;
   canvas.height = image.height;
-  const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext("2d"));
+  const ctx = canvas.getContext("2d");
+
+  if (ctx == null) {
+    throw new Error("generateBricks() - Failed to obtain 2d canvas context");
+  }
 
   ctx.drawImage(
     image,
@@ -136,8 +153,7 @@ export const generateBricks = (opts) => {
     levelHeight,
   );
 
-  /** @type {Brick[]} */
-  const bricks = [];
+  const bricks: Brick[] = [];
 
   for (let row = 0; row < levelHeight; ++row) {
     for (let col = 0; col < levelWidth; ++col) {
