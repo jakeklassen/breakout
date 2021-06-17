@@ -12,6 +12,11 @@ type BallConstructorOptions = {
 };
 
 export class Ball {
+  static State = {
+    Free: "Free",
+    OnPaddle: "OnPaddle",
+  } as const;
+
   state: ValueOf<typeof Ball.State> = Ball.State.OnPaddle;
 
   width: number;
@@ -47,9 +52,6 @@ export class Ball {
     this.velocity.x = this.initialLaunchVelocity.x;
     this.velocity.y = this.initialLaunchVelocity.y;
   }
-
-  static State = {
-    Free: "Free",
-    OnPaddle: "OnPaddle",
-  } as const;
 }
+
+

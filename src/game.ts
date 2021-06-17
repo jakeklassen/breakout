@@ -3,6 +3,12 @@ import { LevelManager } from "./level-manager";
 import { ValueOf } from "./type-utils";
 
 export class Game {
+  static State = {
+    Playing: "Playing",
+    GameOver: "GameOver",
+    GameWon: "GameWon",
+  } as const;
+
   playerLives = PLAYER_STARTING_LIVES;
   score = 0;
 
@@ -20,10 +26,4 @@ export class Game {
     this.playerLives = PLAYER_STARTING_LIVES;
     this.levelManager.changeLevel(1);
   }
-
-  static State = {
-    Playing: "Playing",
-    GameOver: "GameOver",
-    GameWon: "GameWon",
-  } as const;
 }

@@ -1,4 +1,4 @@
-import levelsImageUrl from "url:../assets/levels.png";
+import levelsImageUrl from "../assets/levels.png";
 import {
   aabbBottom,
   aabbLeft,
@@ -141,7 +141,7 @@ function frame(hrt: DOMHighResTimeStamp) {
       clamp(
         Math.abs(ball.velocity.y),
         Math.abs(ball.velocity.y),
-        Math.abs(ball.maxVelocity.y),
+        Math.abs(ball.maxVelocity.y)
       ) * Math.sign(ball.velocity.y);
     ball.velocity.y = -ball.velocity.y;
 
@@ -223,7 +223,7 @@ function frame(hrt: DOMHighResTimeStamp) {
       paddle.position.x,
       paddle.position.y,
       paddle.width,
-      paddle.height,
+      paddle.height
     );
     ctx.fillRect(ball.position.x, ball.position.y, ball.width, ball.height);
 
@@ -235,7 +235,7 @@ function frame(hrt: DOMHighResTimeStamp) {
         brick.position.x,
         brick.position.y,
         brick.width,
-        brick.height,
+        brick.height
       );
     }
   } else if (game.state === Game.State.GameOver) {
@@ -244,7 +244,7 @@ function frame(hrt: DOMHighResTimeStamp) {
     ctx.fillText(
       "Game Over... Click to Restart",
       canvas.width / 2,
-      canvas.height / 2,
+      canvas.height / 2
     );
   } else if (game.state === Game.State.GameWon) {
     ctx.textAlign = "center";
@@ -253,9 +253,11 @@ function frame(hrt: DOMHighResTimeStamp) {
       "You Won!",
       `Your Score Was ${game.score}`,
       "Click to Restart",
-    ].forEach((line, idx) => {
+    ];
+
+    for (const [idx, line] of lines.entries()) {
       ctx.fillText(line, canvas.width / 2, canvas.height / 2 + idx * 18);
-    });
+    }
   }
 
   if (game.levelManager.isCurrentLevelWon) {
@@ -310,7 +312,7 @@ canvas.addEventListener(
       }
     }
   },
-  false,
+  false
 );
 
 document.addEventListener("pointerlockchange", pointerLockChange, false);
