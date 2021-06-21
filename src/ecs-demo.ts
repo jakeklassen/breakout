@@ -1,5 +1,5 @@
-import renderWorldItems from "./ecs/renderingSystem";
-import World, { Color, Dimensions, Entity, Position, Shape } from "./ecs/world";
+import renderWorldItems from "./ecs/rendering-system";
+import World, { Color, Dimensions, Position, Shape } from "./ecs/world";
 
 const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 const ctx = canvas.getContext("2d")!;
@@ -44,4 +44,4 @@ world.addWorldItem({
 // red square, with a position and velocity
 
 // we need to start the game
-reestAnimationFrame(frame);
+requestAnimationFrame(frame);

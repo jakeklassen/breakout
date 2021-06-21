@@ -1,22 +1,22 @@
 // We want to create a world
 
+import { ComponentMap } from "./component-map";
+
 // | EntityId | Position | Color  | Component N ... |
 // | -------- | -------- | ------ | --------------- |
 // | 1        | {x, y}   | 'red'  |
 // | 2        | {x, y}   | 'blue'
 
+export type ComponentConstructor<T extends Component = Component> = new (
+  ...args: any[]
+) => T;
+
 // WE WON'T BREAK THIS RULE
 type EntityId = number;
 
-export interface WorldItem {
-  id: number;
-  position: { x: number; y: number };
-  dimensions: { width: number; height: number };
-  color: "red" | "blue";
-  shape: "rect";
+export abstract class Component {
+  protected readonly __component = true;
 }
-
-class Component {}
 
 export class Position extends Component {
   x: number = 0;
@@ -33,31 +33,24 @@ export class Color extends Component {
   g: number = 0;
   b: number = 0;
 }
-
 export class Shape extends Component {
   shape: string = "rect";
 }
 
 class World {
-  private worldItems: WorldItem[] = [];
-  // Literally is a table
-  // TODO: Follow this through to implementation
-  public entities: Map<EntityId, Component[]> = new Map();
+  #nextEntityId = 0;
 
-  public addEntity() {
-    this.entities.get(1);
+  public entities: Map<EntityId, ComponentMap> = new Map();
+
+  public createEntity(): EntityId {
+    const entityId = this.#nextEntityId++;
+    this.entities.set(entityId, new ComponentMap());
+
+    return entityId;
   }
 
-  public getWorldItems() {
-    return this.worldItems;
-  }
-
-  public getWorldItem(id: EntityId) {
-    return this.worldItems.find((x) => x.id === id);
-  }
-
-  public addWorldItem(worldItem: WorldItem) {
-    this.worldItems.push(worldItem);
+  public getEntityComponents(id: EntityId): ComponentMap | undefined {
+    return this.entities.get(id);
   }
 }
 
