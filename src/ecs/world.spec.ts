@@ -1,4 +1,6 @@
-import World from "./world";
+import World, { Component } from "./world";
+
+class TestComponent extends Component {}
 
 describe("World", () => {
   describe("createEntity()", () => {
@@ -10,14 +12,32 @@ describe("World", () => {
     });
   });
 
-  describe("deleteEntity()", () => {
-    it.todo("should remove the entity and return true");
+  describe("removeEntity()", () => {
+    it("should remove an existing entity and return true", () => {
+      const world = new World();
+      const entity = world.createEntity();
 
-    it.todo("should return false if entity does not exist");
+      expect(world.removeEntity(entity)).toEqual(true);
+      expect(world.getEntityComponents(entity)).toBeUndefined();
+    });
+
+    it("should return false if entity does not exist", () => {
+      const world = new World();
+
+      expect(world.removeEntity(145)).toEqual(false);
+    });
   });
 
   describe("addEntityComponents()", () => {
-    it.todo("should add components to entity component map");
+    it("should add components to entity component map", () => {
+      const world = new World();
+      const entityId = world.createEntity();
+      const testComponent = new TestComponent();
+
+      world.addEntityComponents(entityId, testComponent);
+
+      expect(world.getEntityComponents(entityId)).toBeDefined();
+    });
 
     it.todo("should not throw an error if entity has been deleted");
   });

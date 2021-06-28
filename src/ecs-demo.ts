@@ -26,22 +26,11 @@ function frame(hrt: DOMHighResTimeStamp) {
 
 // create the world
 const world = new World();
-const redSquare = new Entity();
-redSquare.addComponent(new Position());
-redSquare.addComponent(new Dimensions());
-redSquare.addComponent(new Color());
-redSquare.addComponent(new Shape());
 
-world.addWorldItem({
-  id: 1,
-  position: { x: 0, y: 0 },
-  dimensions: { width: 100, height: 100 },
-  color: "red",
-  shape: "rect",
-});
+// create red square
+// attach components
 
-// register our entities and their components
-// red square, with a position and velocity
+// SYSTEMS
 
 // we need to start the game
 requestAnimationFrame(frame);
