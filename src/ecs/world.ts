@@ -49,8 +49,17 @@ class World {
     return entityId;
   }
 
+  public removeEntity(entityId: number): boolean {
+    return this.entities.delete(entityId);
+  }
+
   public getEntityComponents(id: EntityId): ComponentMap | undefined {
     return this.entities.get(id);
+  }
+
+  public addEntityComponents(id: EntityId, ...components: Component[]): void {
+    this.entities.set(id, new ComponentMap());
+    this.entities.get(id)?.add(...components);
   }
 }
 
