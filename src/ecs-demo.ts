@@ -32,5 +32,15 @@ const world = new World();
 
 // SYSTEMS
 
+// Rendering system
+for (const [entityId, componentMap] of world.view(
+  Position,
+  Color,
+  Dimensions,
+)) {
+  // ctx.fillStyle = componentMap.get(Color)?.value;
+  // ctx.drawRect();
+}
+
 // we need to start the game
 requestAnimationFrame(frame);

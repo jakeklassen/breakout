@@ -58,8 +58,23 @@ class World {
   }
 
   public addEntityComponents(id: EntityId, ...components: Component[]): void {
-    this.entities.set(id, new ComponentMap());
     this.entities.get(id)?.add(...components);
+  }
+
+  public view(
+    ...componentConstructors: ComponentConstructor[]
+  ): Array<[EntityId, ComponentMap]> {
+    const validEntities: Array<[EntityId, ComponentMap]> = [];
+
+    for (const [entity, componentMap] of this.entities.entries()) {
+      for (const componentConstructor of componentConstructors) {
+        if (componentMap.has(componentConstructor)) {
+          validEntities.push([entity, componentMap]);
+        }
+      }
+    }
+
+    return validEntities;
   }
 }
 
