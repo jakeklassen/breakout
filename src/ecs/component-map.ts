@@ -23,6 +23,11 @@ export class ComponentMap {
     return this.#map.size;
   }
 
+  /**
+   * Will assert all constructors are in the map
+   * @param componentConstructors
+   * @returns
+   */
   public has(...componentConstructors: ComponentConstructor[]): boolean {
     return componentConstructors.every((constructor) => {
       return this.#map.has(constructor);

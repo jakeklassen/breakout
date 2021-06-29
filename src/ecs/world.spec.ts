@@ -1,6 +1,7 @@
 import World, { Component } from "./world";
 
 class TestComponent extends Component {}
+class Position extends Component {}
 
 describe("World", () => {
   describe("createEntity()", () => {
@@ -36,10 +37,31 @@ describe("World", () => {
 
       world.addEntityComponents(entityId, testComponent);
 
-      expect(world.getEntityComponents(entityId)).toBeDefined();
+      expect(world.getEntityComponents(entityId)?.has(TestComponent)).toEqual(
+        true,
+      );
     });
 
-    it.todo("should not throw an error if entity has been deleted");
+    it("should allow adding multiple components to entity component map", () => {
+      const world = new World();
+      const entityId = world.createEntity();
+      const testComponent = new TestComponent();
+      const position = new Position();
+
+      world.addEntityComponents(entityId, testComponent, position);
+
+      expect(
+        world.getEntityComponents(entityId)?.has(TestComponent, Position),
+      ).toEqual(true);
+    });
+
+    it("should not throw an error if an entity does not exist", () => {
+      const world = new World();
+
+      expect(() =>
+        world.addEntityComponents(Number.MAX_SAFE_INTEGER, new Position()),
+      ).not.toThrowError();
+    });
   });
 
   describe("getEntityComponents()", () => {
@@ -52,9 +74,13 @@ describe("World", () => {
       expect(componentMap).toBeDefined();
     });
 
-    it.todo("should return undefined for non-existing entity");
+    it("should return undefined for non-existing entity", () => {
+      const world = new World();
 
-    it.todo("should return undefined for deleted entity");
+      const componentMap = world.getEntityComponents(123);
+
+      expect(componentMap).not.toBeDefined();
+    });
   });
 
   describe("findEntity()", () => {
@@ -72,6 +98,13 @@ describe("World", () => {
   });
 
   describe("view()", () => {
-    it.todo("should return the correct views");
+    it("should return the correct views", () => {
+      const world = new World();
+      const entityId = world.createEntity();
+      const testPosition = new Position();
+
+      world.addEntityComponents(entityId, testPosition);
+      expect(world.view(Position)).toEqual([[entityId, testPosition]]);
+    });
   });
 });
