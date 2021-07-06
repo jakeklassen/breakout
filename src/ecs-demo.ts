@@ -1,5 +1,9 @@
-import renderWorldItems from "./ecs/rendering-system";
-import World, { Color, Dimensions, Position, Shape } from "./ecs/world";
+import { Color } from "./ecs/components/color";
+import { Position } from "./ecs/components/position";
+import { Rectangle } from "./ecs/components/Rectangle";
+import { Velocity } from "./ecs/components/velocity";
+import { System } from "./ecs/system";
+import World from "./ecs/world";
 
 const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 const ctx = canvas.getContext("2d")!;
@@ -20,7 +24,6 @@ function frame(hrt: DOMHighResTimeStamp) {
 
   last = hrt;
 
-  renderWorldItems(world, ctx);
   // Keep the game loop going forever
   requestAnimationFrame(frame);
 }
@@ -29,24 +32,48 @@ function frame(hrt: DOMHighResTimeStamp) {
 const world = new World();
 
 // create red square
+const redSquare = world.createEntity();
 // attach components
+world.addEntityComponents(
+  redSquare,
+  new Position(),
+  new Velocity(100, 200),
+  new Color("red"),
+  new Rectangle(12, 12),
+);
 
 // SYSTEMS
 
-abstract class System {}
-
 class MovementSystem extends System {
   update(world: World, dt: number) {
-    for (const [entityId, componentMap] of world.view(Position, Dimensions)) {
-      componentMap.get(Position).x;
-      componentMap.get(Dimensions);
-
+    for (const [, componentMap] of world.view(Position, Velocity)) {
       // Move the position by some velocity
+      const position = componentMap.get(Position);
+      const velocity = componentMap.get(Velocity);
+      // TODO: continue movement system
     }
   }
 }
 
 // Rendering system
+class RenderingSystem extends System {
+  constructor(private readonly context: CanvasRenderingContext2D) {
+    super();
+  }
+
+  public update(world: World, dt: number): void {
+    for (const [, componentMap] of world.view(Position, Color, Rectangle)) {
+      const { color } = componentMap.get(Color);
+      const { width, height } = componentMap.get(Rectangle);
+      const { x, y } = componentMap.get(Position);
+
+      this.context.fillStyle = color;
+      this.context.fillRect(x, y, width, height);
+    }
+  }
+}
+
+world.addSystems(new RenderingSystem(ctx));
 
 // we need to start the game
 requestAnimationFrame(frame);
