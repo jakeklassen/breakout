@@ -40,6 +40,8 @@ class MovementSystem extends System {
     for (const [entityId, componentMap] of world.view(Position, Dimensions)) {
       componentMap.get(Position).x;
       componentMap.get(Dimensions);
+
+      // Move the position by some velocity
     }
   }
 }

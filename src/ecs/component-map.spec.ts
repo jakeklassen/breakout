@@ -1,5 +1,5 @@
+import { Component } from "./component";
 import { ComponentMap } from "./component-map";
-import { Component } from "./world";
 
 class Color extends Component {}
 class Rectangle extends Component {}

@@ -1,10 +1,10 @@
-import World, { Component } from "./world";
+import { Component } from "./component";
+import { System } from "./system";
+import World from "./world";
 
 class Color extends Component {}
 class TestComponent extends Component {}
 class Position extends Component {}
-
-// TODO: Abstract System to it's own file
 class MovementSystem extends System {
   update() {}
 }
@@ -119,13 +119,71 @@ describe("World", () => {
   });
 
   describe("systems", () => {
-    it("can add a system", () => {
+    class SystemA extends System {
+      public update(_world: World, _dt: number): void {}
+    }
+
+    class SystemB extends System {
+      public update(_world: World, _dt: number): void {}
+    }
+
+    it("can add systems", () => {
       const world = new World();
       const movementSystem = new MovementSystem();
       movementSystem.update = jest.fn();
-      world.addSystem(movementSystem);
+      world.addSystems(movementSystem);
+
+      world.updateSystems(1 / 60);
 
       expect(movementSystem.update).toHaveBeenCalled();
+    });
+
+    it("can remove systems", () => {
+      const world = new World();
+
+      const systemA = new SystemA();
+      const systemB = new SystemB();
+
+      const systemAUpdateSpy = jest.spyOn(systemA, "update");
+      const systemBUpdateSpy = jest.spyOn(systemB, "update");
+
+      world.addSystems(systemA, systemB);
+
+      world.updateSystems(1 / 60);
+
+      expect(systemAUpdateSpy).toBeCalledTimes(1);
+      expect(systemBUpdateSpy).toBeCalledTimes(1);
+
+      world.removeSystems(systemB);
+      world.updateSystems(1 / 60);
+
+      expect(systemAUpdateSpy).toBeCalledTimes(2);
+      expect(systemBUpdateSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should update systems in insertion order", () => {
+      const world = new World();
+
+      const systemA = new SystemA();
+      const systemB = new SystemB();
+
+      const systemAUpdateSpy = jest.spyOn(systemA, "update");
+      const systemBUpdateSpy = jest.spyOn(systemB, "update");
+
+      world.addSystems(systemA, systemB);
+
+      world.updateSystems(1 / 60);
+
+      expect(systemAUpdateSpy).toBeCalledTimes(1);
+      expect(systemBUpdateSpy).toBeCalledTimes(1);
+
+      // Assert call order!
+      const [systemAUpdateSpyCallOrder] =
+        systemAUpdateSpy.mock.invocationCallOrder;
+      const [systemBUpdateSpyCallOrder] =
+        systemBUpdateSpy.mock.invocationCallOrder;
+
+      expect(systemAUpdateSpyCallOrder).toBeLessThan(systemBUpdateSpyCallOrder);
     });
   });
 });

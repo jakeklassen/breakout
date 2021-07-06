@@ -1,6 +1,8 @@
 // We want to create a world
 
+import { Component } from "./component";
 import { ComponentMap, SafeComponentMap } from "./component-map";
+import { System } from "./system";
 
 // | EntityId | Position | Color  | Component N ... |
 // | -------- | -------- | ------ | --------------- |
@@ -14,34 +16,11 @@ export type ComponentConstructor<T extends Component = Component> = new (
 // WE WON'T BREAK THIS RULE
 type EntityId = number;
 
-// TODO: Get this stuff into their own files
-export abstract class Component {
-  protected readonly __component = true;
-}
-
-export class Position extends Component {
-  x: number = 0;
-  y: number = 0;
-}
-
-export class Dimensions extends Component {
-  width: number = 0;
-  height: number = 0;
-}
-
-export class Color extends Component {
-  r: number = 0;
-  g: number = 0;
-  b: number = 0;
-}
-export class Shape extends Component {
-  shape: string = "rect";
-}
-
 class World {
   #nextEntityId = 0;
 
   public entities: Map<EntityId, ComponentMap> = new Map();
+  public systems: Array<System> = [];
 
   public createEntity(): EntityId {
     const entityId = this.#nextEntityId++;
@@ -74,6 +53,18 @@ class World {
     }
 
     return validEntities;
+  }
+
+  public addSystems(...systems: System[]) {
+    this.systems.push(...systems);
+  }
+
+  public updateSystems(dt: number) {
+    this.systems.forEach((system) => system.update(this, dt));
+  }
+
+  public removeSystems(...systems: System[]) {
+    this.systems = this.systems.filter((system) => !systems.includes(system));
   }
 }
 
