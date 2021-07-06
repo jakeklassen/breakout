@@ -33,4 +33,14 @@ describe("ComponentMap", () => {
     expect(cm.size).toEqual(0);
     expect(cm.has(Color, Rectangle)).toEqual(false);
   });
+
+  it("should support getting a component", () => {
+    const cm = new ComponentMap();
+    const color = new Color();
+
+    cm.add(color, new Rectangle());
+    const retrievedColor = cm.get(Color);
+
+    expect(color).toEqual(retrievedColor);
+  });
 });

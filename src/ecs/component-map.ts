@@ -1,4 +1,9 @@
-import { ComponentConstructor, Component } from "./world";
+import { Component, ComponentConstructor } from "./world";
+
+export type SafeComponentMap<T extends ComponentConstructor[]> = {
+  // ComponentMap['get'] overload for specific component constructors
+  get<C extends T[number]>(ctor: C): InstanceType<C>;
+} & ComponentMap;
 
 export class ComponentMap {
   #map = new Map<ComponentConstructor, Component>();
@@ -32,5 +37,11 @@ export class ComponentMap {
     return componentConstructors.every((constructor) => {
       return this.#map.has(constructor);
     });
+  }
+
+  public get<T extends Component>(
+    componentConstructor: ComponentConstructor<T>,
+  ): T | undefined {
+    return this.#map.get(componentConstructor) as T;
   }
 }

@@ -16,6 +16,7 @@ function frame(hrt: DOMHighResTimeStamp) {
   dt = (hrt - last) / 1000;
 
   // we need to work with our systems
+  world.updateSystems(dt);
 
   last = hrt;
 
@@ -32,15 +33,18 @@ const world = new World();
 
 // SYSTEMS
 
-// Rendering system
-for (const [entityId, componentMap] of world.view(
-  Position,
-  Color,
-  Dimensions,
-)) {
-  // ctx.fillStyle = componentMap.get(Color)?.value;
-  // ctx.drawRect();
+abstract class System {}
+
+class MovementSystem extends System {
+  update(world: World, dt: number) {
+    for (const [entityId, componentMap] of world.view(Position, Dimensions)) {
+      componentMap.get(Position).x;
+      componentMap.get(Dimensions);
+    }
+  }
 }
+
+// Rendering system
 
 // we need to start the game
 requestAnimationFrame(frame);
