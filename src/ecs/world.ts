@@ -1,6 +1,6 @@
 // We want to create a world
 
-import { ComponentMap } from "./component-map";
+import { ComponentMap, SafeComponentMap } from "./component-map";
 
 // | EntityId | Position | Color  | Component N ... |
 // | -------- | -------- | ------ | --------------- |
@@ -14,6 +14,7 @@ export type ComponentConstructor<T extends Component = Component> = new (
 // WE WON'T BREAK THIS RULE
 type EntityId = number;
 
+// TODO: Get this stuff into their own files
 export abstract class Component {
   protected readonly __component = true;
 }
@@ -61,16 +62,14 @@ class World {
     this.entities.get(id)?.add(...components);
   }
 
-  public view(
-    ...componentConstructors: ComponentConstructor[]
-  ): Array<[EntityId, ComponentMap]> {
-    const validEntities: Array<[EntityId, ComponentMap]> = [];
+  public view<CC extends ComponentConstructor[]>(
+    ...componentConstructors: CC
+  ): Array<[EntityId, SafeComponentMap<CC>]> {
+    const validEntities: Array<[EntityId, SafeComponentMap<CC>]> = [];
 
     for (const [entity, componentMap] of this.entities.entries()) {
-      for (const componentConstructor of componentConstructors) {
-        if (componentMap.has(componentConstructor)) {
-          validEntities.push([entity, componentMap]);
-        }
+      if (componentMap.has(...componentConstructors)) {
+        validEntities.push([entity, componentMap as SafeComponentMap<CC>]);
       }
     }
 

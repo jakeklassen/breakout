@@ -1,7 +1,13 @@
 import World, { Component } from "./world";
 
+class Color extends Component {}
 class TestComponent extends Component {}
 class Position extends Component {}
+
+// TODO: Abstract System to it's own file
+class MovementSystem extends System {
+  update() {}
+}
 
 describe("World", () => {
   describe("createEntity()", () => {
@@ -104,7 +110,22 @@ describe("World", () => {
       const testPosition = new Position();
 
       world.addEntityComponents(entityId, testPosition);
-      expect(world.view(Position)).toEqual([[entityId, testPosition]]);
+      expect(world.view(Position)).toEqual([
+        [entityId, world.getEntityComponents(entityId)],
+      ]);
+
+      expect(world.view(Position, Color)).toEqual([]);
+    });
+  });
+
+  describe("systems", () => {
+    it("can add a system", () => {
+      const world = new World();
+      const movementSystem = new MovementSystem();
+      movementSystem.update = jest.fn();
+      world.addSystem(movementSystem);
+
+      expect(movementSystem.update).toHaveBeenCalled();
     });
   });
 });
