@@ -1,4 +1,5 @@
-import { Component, ComponentConstructor } from "./world";
+import { Component } from "./component";
+import { ComponentConstructor } from "./world";
 
 export type SafeComponentMap<T extends ComponentConstructor[]> = {
   // ComponentMap['get'] overload for specific component constructors
