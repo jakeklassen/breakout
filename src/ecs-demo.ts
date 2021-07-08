@@ -1,6 +1,6 @@
 import { Color } from "./ecs/components/color";
 import { Position } from "./ecs/components/position";
-import { Rectangle } from "./ecs/components/Rectangle";
+import { Rectangle } from "./ecs/components/rectangle";
 import { Velocity } from "./ecs/components/velocity";
 import { System } from "./ecs/system";
 import World from "./ecs/world";
