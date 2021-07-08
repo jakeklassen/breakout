@@ -31,26 +31,58 @@ function frame(hrt: DOMHighResTimeStamp) {
 // create the world
 const world = new World();
 
-// create red square
-const redSquare = world.createEntity();
+const getRandom = (max: number, min = 0) =>
+  Math.floor(Math.random() * max) + min;
+
 // attach components
-world.addEntityComponents(
-  redSquare,
-  new Position(),
-  new Velocity(100, 200),
-  new Color("red"),
-  new Rectangle(12, 12),
-);
+for (let i = 0; i < 100; ++i) {
+  world.addEntityComponents(
+    world.createEntity(),
+    new Position(getRandom(canvas.width), getRandom(canvas.height)),
+    new Velocity(getRandom(100, 20), getRandom(100, 20)),
+    new Color(
+      `rgba(${getRandom(255, 0)}, ${getRandom(255, 0)}, ${getRandom(
+        255,
+        0,
+      )}, 1)`,
+    ),
+    new Rectangle(getRandom(20, 10), getRandom(20, 10)),
+  );
+}
 
 // SYSTEMS
 
-class MovementSystem extends System {
+class PhysicsSystem extends System {
+  constructor(public readonly viewport: Rectangle) {
+    super();
+  }
+
   update(world: World, dt: number) {
-    for (const [, componentMap] of world.view(Position, Velocity)) {
+    for (const [, componentMap] of world.view(Position, Velocity, Rectangle)) {
       // Move the position by some velocity
       const position = componentMap.get(Position);
       const velocity = componentMap.get(Velocity);
-      // TODO: continue movement system
+      const rectangle = componentMap.get(Rectangle);
+
+      position.x += velocity.x * dt;
+      position.y += velocity.y * dt;
+
+      if (position.x + rectangle.width > this.viewport.width) {
+        // Snap collider back into viewport
+        position.x = this.viewport.width - rectangle.width;
+        velocity.x = -velocity.x;
+      } else if (position.x < 0) {
+        position.x = 0;
+        velocity.x = -velocity.x;
+      }
+
+      if (position.y + rectangle.height > this.viewport.height) {
+        position.y = this.viewport.height - rectangle.height;
+        velocity.y = -velocity.y;
+      } else if (position.y < 0) {
+        position.y = 0;
+        velocity.y = -velocity.y;
+      }
     }
   }
 }
@@ -61,7 +93,9 @@ class RenderingSystem extends System {
     super();
   }
 
-  public update(world: World, dt: number): void {
+  public update(world: World, _dt: number): void {
+    this.context.clearRect(0, 0, canvas.width, canvas.height);
+
     for (const [, componentMap] of world.view(Position, Color, Rectangle)) {
       const { color } = componentMap.get(Color);
       const { width, height } = componentMap.get(Rectangle);
@@ -73,6 +107,7 @@ class RenderingSystem extends System {
   }
 }
 
+world.addSystems(new PhysicsSystem(new Rectangle(canvas.width, canvas.height)));
 world.addSystems(new RenderingSystem(ctx));
 
 // we need to start the game
