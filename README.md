@@ -25,3 +25,11 @@ System: A way to query for components and update them
 ## High Level Objective
 
 Move a colored square around the screen with collisions, using an ECS.
+
+# Directions:
+
+- Remake breakout in the ECS <-- YAGNI
+- Turn the ECS into a library (npm)
+- Make the ECS fast
+  - Stop iterating the entire world many times every frame
+  - Systems could have filter
