@@ -19,6 +19,6 @@
     "vite": "^2.3.7"
   },
   "dependencies": {
-    "bitecs": "^0.3.17-1"
+    "bitecs": "0.3.17-1"
   }
 }
