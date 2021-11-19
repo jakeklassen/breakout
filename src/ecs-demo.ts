@@ -101,8 +101,6 @@ class RenderingSystem extends System {
       const { width, height } = componentMap.get(Rectangle);
       const { x, y } = componentMap.get(Position);
 
-      componentMap.get(Position).x;
-
       this.context.fillStyle = color;
       this.context.fillRect(x, y, width, height);
     }
