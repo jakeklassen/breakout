@@ -1,3 +1,3 @@
 export abstract class Component {
-  protected readonly __component = true;
+  protected abstract readonly __component: string;
 }

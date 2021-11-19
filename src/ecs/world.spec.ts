@@ -2,9 +2,18 @@ import { Component } from "./component";
 import { System } from "./system";
 import World from "./world";
 
-class Color extends Component {}
-class TestComponent extends Component {}
-class Position extends Component {}
+class Color extends Component {
+  protected __component = Color.name;
+}
+
+class TestComponent extends Component {
+  protected __component = TestComponent.name;
+}
+
+class Position extends Component {
+  protected __component = TestComponent.name;
+}
+
 class MovementSystem extends System {
   update() {}
 }

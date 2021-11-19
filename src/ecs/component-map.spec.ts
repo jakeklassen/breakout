@@ -1,8 +1,13 @@
 import { Component } from "./component";
 import { ComponentMap } from "./component-map";
 
-class Color extends Component {}
-class Rectangle extends Component {}
+class Color extends Component {
+  protected __component = Color.name;
+}
+
+class Rectangle extends Component {
+  protected __component = Rectangle.name;
+}
 
 describe("ComponentMap", () => {
   it("should support adding components", () => {
