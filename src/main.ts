@@ -141,7 +141,7 @@ function frame(hrt: DOMHighResTimeStamp) {
       clamp(
         Math.abs(ball.velocity.y),
         Math.abs(ball.velocity.y),
-        Math.abs(ball.maxVelocity.y)
+        Math.abs(ball.maxVelocity.y),
       ) * Math.sign(ball.velocity.y);
     ball.velocity.y = -ball.velocity.y;
 
@@ -223,7 +223,7 @@ function frame(hrt: DOMHighResTimeStamp) {
       paddle.position.x,
       paddle.position.y,
       paddle.width,
-      paddle.height
+      paddle.height,
     );
     ctx.fillRect(ball.position.x, ball.position.y, ball.width, ball.height);
 
@@ -235,7 +235,7 @@ function frame(hrt: DOMHighResTimeStamp) {
         brick.position.x,
         brick.position.y,
         brick.width,
-        brick.height
+        brick.height,
       );
     }
   } else if (game.state === Game.State.GameOver) {
@@ -244,7 +244,7 @@ function frame(hrt: DOMHighResTimeStamp) {
     ctx.fillText(
       "Game Over... Click to Restart",
       canvas.width / 2,
-      canvas.height / 2
+      canvas.height / 2,
     );
   } else if (game.state === Game.State.GameWon) {
     ctx.textAlign = "center";
@@ -312,7 +312,7 @@ canvas.addEventListener(
       }
     }
   },
-  false
+  false,
 );
 
 document.addEventListener("pointerlockchange", pointerLockChange, false);
